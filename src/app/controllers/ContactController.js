@@ -11,7 +11,8 @@ class ContactController {
 	// show a single contact
 	async show(request, response) {
 		const { id } = request.params;
-		const contact = await ContactsRepository.findById(id);
+		const uuid = id.trim();  
+		const contact = await ContactsRepository.findById(uuid);
 
 		if (!contact) {
 			return response.status(404).json({ error: "Contact not found" });
@@ -47,9 +48,10 @@ class ContactController {
 	// update a contact
 	async update(request, response) {
 		const { id } = request.params;
+		const uuid = id.trim();  
 		const { name, email, phone, category_id } = request.body;
 
-		const contactExists = await ContactsRepository.findById(id);
+		const contactExists = await ContactsRepository.findById(uuid);
 
 		if (!contactExists) {
 			return response.status(404).json({ error: "Contact not found" });
@@ -75,7 +77,8 @@ class ContactController {
 	// delete a contact
 	async delete(request, response) {
 		const { id } = request.params;
-		const contact = await ContactsRepository.findById(id);
+		const uuid = id.trim()
+		const contact = await ContactsRepository.findById(uuid);
 
 		if (!contact) {
 			return response.status(404).json({ error: "Contact not found" });
