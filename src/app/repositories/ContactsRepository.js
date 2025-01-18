@@ -42,6 +42,8 @@ class ContactsRepository {
 	}
 
 	async update(id, { name, email, phone, category_id }) {
+		const uuid = id.trim();
+
 		const categoryExists = await db.query(
 			"SELECT 1 FROM categories WHERE id = $1",
 			[category_id]
@@ -58,18 +60,24 @@ class ContactsRepository {
 				WHERE id = $5
 				RETURNING *
 			`,
-			[name, email, phone, category_id, id]
+			[name, email, phone, category_id, uuid]
 		);
 
-		if (rows.length === 0) {
-			throw new Error("Contato não encontrado ou não foi possível atualizar");
+		try {
+			if (rows.length === 0) {
+				throw new Error("Contato não encontrado ou não foi possível atualizar");
+			}
+	
+			return rows[0]; // Certifique-se de retornar o objeto correto
+		} catch (error) {
+				console.error(error)
+				throw new Error("Erro ao tentar atualizar o contato")
 		}
-
-		return rows[0]; // Certifique-se de retornar o objeto correto
 	}
 
 	async delete(id) {
-		const deleteOp = await db.query("DELETE FROM contacts WHERE id = $1", [id]);
+		const uuid = id.trim()
+		const deleteOp = await db.query("DELETE FROM contacts WHERE id = $1", [uuid]);
 		return deleteOp;
 	}
 }
