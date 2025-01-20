@@ -42,30 +42,17 @@ class ContactsRepository {
 	}
 
 	async update(id, { name, email, phone, category_id }) {
-		const categoryExists = await db.query(
-			"SELECT 1 FROM categories WHERE id = $1",
-			[category_id]
-		);
-
-		if (categoryExists.rowCount === 0) {
-			throw new Error("Categoria não encontrada");
-		}
-
-		const { rows } = await db.query(
+		const [row] = await db.query(
 			`
 				UPDATE contacts
 				SET name = $1, email = $2, phone = $3, category_id = $4
 				WHERE id = $5
-				RETURNING *
+				RETURNING * 
 			`,
 			[name, email, phone, category_id, id]
 		);
 
-		if (rows.length === 0) {
-			throw new Error("Contato não encontrado ou não foi possível atualizar");
-		}
-
-		return rows[0]; // Certifique-se de retornar o objeto correto
+		return row;
 	}
 
 	async delete(id) {
