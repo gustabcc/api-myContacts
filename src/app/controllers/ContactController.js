@@ -8,7 +8,7 @@ class ContactController {
 
 		response.json(contacts);
 	}
-	// show a single contact
+
 	async show(request, response) {
 		const { id } = request.params;
 		const contact = await ContactsRepository.findById(id);
@@ -19,7 +19,7 @@ class ContactController {
 
 		response.json(contact);
 	}
-	// create a new contact
+
 	async store(request, response) {
 		const { name, email, phone, category_id } = request.body;
 
